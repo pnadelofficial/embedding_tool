@@ -23,12 +23,13 @@ text_option = st.selectbox(
 )
 
 poss_col_names = ['sentences','sents','sentence','sent','text','texts']
+text = ''
 
 if text_option == 'Comma Separated Values (.csv)':
     uploaded_file = st.file_uploader("Choose a file to navigate")
     check_data_type = False
     if uploaded_file is not None:
-        org = pd.read_csv(uploaded_file).dropna() # .rename(columns={'0':'sents'}) # more general?
+        org = pd.read_csv(uploaded_file).dropna()
         if all(poss_col_names) not in org.columns:
             object_cols = [org[col] for col in org.columns if org[col].dtype == 'O']
             object_cols = sorted(object_cols, key=lambda x: org[x.name].apply(lambda y: len(y.split())).mean(),reverse=True)
