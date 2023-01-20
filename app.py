@@ -22,14 +22,17 @@ text_option = st.selectbox(
     ('Comma Separated Values (.csv)', 'UTF-8 encoded Text file (.txt)', 'Input text here') # 'Excel sheet (.xlsx)',
 )
 
+poss_col_names = ['sentences','sents','sentence','sent','text','texts']
+
 if text_option == 'Comma Separated Values (.csv)':
     uploaded_file = st.file_uploader("Choose a file to navigate")
     check_data_type = False
     if uploaded_file is not None:
         org = pd.read_csv(uploaded_file).dropna() # .rename(columns={'0':'sents'}) # more general?
-        object_cols = [org[col] for col in org.columns if org[col].dtype == 'O']
-        object_cols = sorted(object_cols, key=lambda x: org[x.name].apply(lambda y: len(y.split())).mean())
-        org = org.rename(columns={object_cols[0].name:'sents'})
+        if all(poss_col_names) not in org.columns:
+            object_cols = [org[col] for col in org.columns if org[col].dtype == 'O']
+            object_cols = sorted(object_cols, key=lambda x: org[x.name].apply(lambda y: len(y.split())).mean(),reverse=True)
+            org = org.rename(columns={object_cols[0].name:'sents'})
     else:
         org = []
 # elif text_option == 'Excel sheet (.xlsx)':
@@ -63,7 +66,6 @@ def get_data(name, check_data_type, model_name):
         em = utils.Embedder(model_name, sentences)
         return em.embed()
     else:
-        poss_col_names = ['sentences','sents','sentence','sent','text','texts']
         if len(org) > 0:
             intersect = set(poss_col_names).intersection(set(list(org.columns)))
             col_name = list(intersect)[0]
