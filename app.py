@@ -48,9 +48,11 @@ elif text_option == 'UTF-8 encoded Text file (.txt)':
     check_data_type = True
     if uploaded_file is not None:
         text = io.StringIO(uploaded_file.getvalue().decode("utf-8")).read()
+    org = None
 else:
     check_data_type = True
     uploaded_file = None
+    org = None
     text = st.text_area('Text to navigate')
 
 model_option = st.selectbox(
