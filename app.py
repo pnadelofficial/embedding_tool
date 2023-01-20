@@ -68,7 +68,7 @@ def get_data(name, check_data_type, model_name):
         sentences = pp.sentence_tokenize()
         em = utils.Embedder(model_name, sentences)
         return em.embed()
-    elif len(org) > 0:
+    elif org is not None:
         intersect = set(poss_col_names).intersection(set(list(org.columns)))
         col_name = list(intersect)[0]
         sentences = org[col_name].to_list() # must have one of the above
