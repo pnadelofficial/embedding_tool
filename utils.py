@@ -1,5 +1,6 @@
 import pandas as pd
 import nltk
+nltk.download('punkt')
 from umap import UMAP
 from sklearn.pipeline import make_pipeline 
 from embetter.text import SentenceEncoder
