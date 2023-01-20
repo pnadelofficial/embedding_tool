@@ -61,7 +61,7 @@ model_option = st.selectbox(
 @st.experimental_memo
 def get_data(name, check_data_type, model_name):
     #st.write(f'Reading {name}...')
-    if check_data_type:
+    if check_data_type and (len(text)>0):
         pp = utils.Preprocesser(text)
         sentences = pp.sentence_tokenize()
         em = utils.Embedder(model_name, sentences)
