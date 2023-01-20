@@ -110,6 +110,7 @@ else:
 if st.button('Reset'):
     fig_selected = []
 
+subsets = []
 if len(fig_selected) > 0:
     st.markdown(f"<p><b>Number of sentences</b>: {len(fig_selected)}</p>",unsafe_allow_html=True)
     st.markdown("<hr>",unsafe_allow_html=True)
@@ -117,8 +118,18 @@ if len(fig_selected) > 0:
         subset = df.loc[(df.x == selected['x']) & (df.y == selected['y'])]
         if check_data_type:
             p = subset.apply(lambda x: display_text(x['text']),axis=1)
+            subsets.append(subset)
         else:
             p = subset.apply(lambda x: display_text(x['text'],**{str(i):x[o] for (i,o) in enumerate(intersect)}),axis=1)
+            subsets.append(subset)
+    data = pd.concat(subsets)
+    data.text = data.text.apply(lambda x: x.replace('<br>', ' '))
+    st.download_button(
+        label = 'Download data as CSV',
+        data = data.to_csv().encode('utf-8'),
+        file_name = 'embedding_data.csv',
+        mime = 'text/csv'
+    )
 else:
     st.write('Use the select tools in the chart above to select labeled sentences.')
 
